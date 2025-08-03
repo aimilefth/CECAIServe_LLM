@@ -19,4 +19,3 @@ RUN pip install --no-cache-dir \
     flask \
     redistimeseries \
     python-dotenv \
-    pyJoules
