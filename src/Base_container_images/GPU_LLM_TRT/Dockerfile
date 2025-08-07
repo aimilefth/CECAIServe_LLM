@@ -14,7 +14,7 @@
 # Global Build Arguments (Available to all stages)
 # =================================================================================================
 # Argument to specify the Git release (tag or branch) to clone. Default: A recent tag known to work well.
-ARG GIT_RELEASE=v0.15.0
+ARG GIT_RELEASE=v0.14.0
 
 # Argument to specify the target CUDA architectures, separated by semicolons.
 # Defaults: 70-real (V100), 80-real (A100), 86-real (A10, etc.)
@@ -22,7 +22,7 @@ ARG CUDA_ARCHS="70-real;80-real;86-real"
 
 # Base image tag for build. Using 25.01-py3 for V100 compatibility.
 ARG BASE_IMAGE=nvcr.io/nvidia/pytorch
-ARG BASE_TAG=24.10-py3
+ARG BASE_TAG=24.07-py3
 
 # =================================================================================================
 # Stage 1: 'source' - Clone the repository from GitHub
@@ -141,6 +141,15 @@ RUN --mount=type=cache,target=/root/.cache/pip \
     pip install tensorrt_llm*.whl && \
     rm tensorrt_llm*.whl && \
     pip cache purge || true
+
+# <<< START OF THE FIX >>>
+# PATCH: Modify the installed profiler.py to remove the problematic pynvml version check.
+# This is done *after* installation to keep the build cache for the time-consuming wheel build valid.
+# It changes "if pynvml.__version__ < '11.5.0' or driver_version < '526':"
+# to "if driver_version < '526':", which is a more robust fix.
+RUN PROFILER_PATH=$(python3 -c 'import site, os; print(os.path.join(site.getsitepackages()[0], "tensorrt_llm/profiler.py"))') && \
+    sed -i "s/pynvml.__version__ < '11.5.0' or //" ${PROFILER_PATH}
+# <<< END OF THE FIX >>>
 
 # Copy over examples, benchmarks, and other useful files from the source
 ARG SRC_DIR=/src/tensorrt_llm
