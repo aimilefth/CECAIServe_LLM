@@ -1,5 +1,5 @@
 # Start from ARM's PyTorch Docker image
-FROM armswdev/pytorch-arm-neoverse:r24.03-torch-2.2.1-onednn-acl
+FROM armswdev/pytorch-arm-neoverse:r24.07-torch-2.3.0-onednn-acl
 
 # Update and install necessary system dependencies
 USER root
@@ -12,10 +12,10 @@ RUN apt-get update \
 # Pinning numpy<2.0 is the crucial fix to maintain compatibility
 # with the libraries (PyTorch, SciPy) pre-installed in the base image.
 RUN pip install --no-cache-dir \
-    "numpy<2.0" \
-    "transformers[torch]" \
-    opencv-python \
-    requests \
-    flask \
-    redistimeseries \
-    python-dotenv \
+    numpy==1.25.2 \
+    transformers[torch]==4.32.1 \
+    opencv-python==4.11.0.86 \
+    requests==2.31.0 \
+    flask==3.1.1 \
+    redistimeseries==1.4.5 \
+    python-dotenv==1.1.1
