@@ -23,9 +23,9 @@ download_hf_repo() {
 
     # Choose CLI: prefer 'hf', fallback to 'huggingface-cli'
     if command -v hf >/dev/null 2>&1; then
-        DL_CMD=(hf download "$REPO_ID" --repo-type model --local-dir "$REPO_DIR" --local-dir-use-symlinks False)
+        DL_CMD=(hf download "$REPO_ID" --repo-type model --local-dir "$REPO_DIR")
     elif command -v huggingface-cli >/dev/null 2>&1; then
-        DL_CMD=(huggingface-cli download "$REPO_ID" --repo-type model --local-dir "$REPO_DIR" --local-dir-use-symlinks False)
+        DL_CMD=(huggingface-cli download "$REPO_ID" --repo-type model --local-dir "$REPO_DIR")
     else
         log_progress "Error: neither 'hf' nor 'huggingface-cli' is installed or on PATH."
         return 1
@@ -70,6 +70,16 @@ tar_repo() {
     # Create tar with folder as root entry (so it untars into gpt2/)
     if ( cd "$DEST_ROOT" && tar -cf "$TAR_NAME" "$REPO_NAME" ); then
         log_progress "Tarball created at $TAR_PATH"
+
+        # Sanity-check the archive is readable and non-empty
+        if tar -tf "$TAR_PATH" >/dev/null 2>&1; then
+            log_progress "Archive verified; removing source directory: $REPO_DIR"
+            rm -rf "$REPO_DIR"
+            log_progress "Source directory removed. Kept only $TAR_PATH."
+        else
+            log_progress "Warning: couldn't verify tarball contents; not deleting $REPO_DIR."
+            return 1
+        fi
     else
         log_progress "Error creating tarball."
         return 1
@@ -80,7 +90,7 @@ main() {
     log_progress "Starting Hugging Face repo fetch and packaging pipeline."
     download_hf_repo || { log_progress "Download step failed."; exit 1; }
     remove_unnecessary_files
-    tar_repo || { log_progress "Tar step failed."; exit 1; }
+    #tar_repo || { log_progress "Tar step failed."; exit 1; }
     log_progress "All tasks completed successfully."
 }
 

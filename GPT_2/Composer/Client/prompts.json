@@ -1,0 +1,31 @@
+{
+  "prompts": [
+    "Write a haiku about containers:",
+    "Explain what a GPU does in one sentence:",
+    "Define overfitting in one sentence:",
+    "Write a limerick about debugging:",
+    "Explain quaternions in two sentences:",
+    "Write SQL: top 3 customers by revenue:",
+    "Give a regex that matches IPv4 addresses:",
+    "Name 3 edge cases for a login form:",
+    "Rewrite this in active voice:",
+    "Classify the sentiment (positive/neutral/negative):",
+    "Fix this Python bug in one line:",
+    "Explain backpropagation for artists (≤2 sentences):",
+    "Write a 6-word story about space travel:",
+    "List 5 test cases for a calculator:",
+    "Bash one-liner to count lines recursively:",
+    "Describe AES-256 in ≤30 words:",
+    "Two analogies: mutex vs semaphore:",
+    "Write an English pangram:",
+    "Commit message: fix flaky tests:",
+    "Write a polite two-sentence follow-up email:",
+    "Explain Big-O of binary search in one sentence:"
+  ],
+  "gen": {
+    "max_new_tokens": 32,
+    "do_sample": true,
+    "temperature": 0.8,
+    "top_p": 0.95
+  }
+}
