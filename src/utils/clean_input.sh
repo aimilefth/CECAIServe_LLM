@@ -52,7 +52,7 @@ for dir in "${directories[@]}"; do
     fi
 done
 
-dirs=("AGX" "ALVEO" "ARM" "CPU" "GPU" "GPU_TFTRT" "INTEL" "VERSAL" "ZYNQ" "AGX_TF" "ARM_TF" "CPU_TF" "GPU_TF" "AGX_PT" "ARM_PT" "CPU_PT" "GPU_PT")
+dirs=("CPU_LLM_VLLM" "CPU_LLM_TRF")
 
 if [ "$clean_models" = "True" ]; then
     for dir in "${dirs[@]}"; do
