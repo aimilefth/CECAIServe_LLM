@@ -15,13 +15,6 @@ class BaseExperimentServer(base_server.BaseServer):
         self.experiment_configs['expected_input'] = (None,)  # one dim: string prompt
         self.experiment_configs['expected_output'] = (None,) # string output
         self.experiment_configs['list_prompts'] = []
-        # defaults read by server if client doesn't send overrides
-        self.experiment_configs['defaults'] = dict(
-            max_new_tokens=int(os.environ.get('MAX_NEW_TOKENS', '64')),
-            do_sample=os.environ.get('DO_SAMPLE', 'True').lower() in ('true','1','yes','y'),
-            temperature=float(os.environ.get('TEMPERATURE','1.0')),
-            top_p=float(os.environ.get('TOP_P','1.0')),
-        )
 
     def decode_input(self, indata):
         # Expect JSON: { "prompts": [str, ...], "gen": { optional overrides } }
