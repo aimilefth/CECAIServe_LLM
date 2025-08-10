@@ -1,3 +1,4 @@
 *.log
 gpt2
 get_code_in_txt.py
+*gguf
