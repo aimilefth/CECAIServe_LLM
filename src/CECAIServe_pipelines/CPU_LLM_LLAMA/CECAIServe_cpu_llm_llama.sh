@@ -21,21 +21,6 @@ update_yaml() {
     fi
 }
 
-valid_hf_repo() {
-    local d="$1"
-    [[ -d "$d" ]] || return 1
-    # need >=1 *.safetensors
-    shopt -s nullglob
-    local st=( "$d"/*.safetensors )
-    shopt -u nullglob
-    [[ ${#st[@]} -ge 1 ]] || return 1
-    # need the three files below
-    [[ -f "$d/config.json" ]]     || return 1
-    [[ -f "$d/tokenizer.json" ]]  || return 1
-    [[ -f "$d/vocab.json" ]]      || return 1
-    return 0
-}
-
 # Find first .gguf (depth 1..N)
 find_first_gguf() {
     local root="$1"
@@ -75,6 +60,23 @@ exec 2>&1
 
 # Print the current date and time
 echo "CECAIServe_${NAME,,}.sh script started on: $(date -u +"%Y-%m-%d %H:%M:%S")"
+
+# Run Converter
+if [ "$run_converter" = "True" ]; then
+    converter_path=$absolute_input_path/Converter
+    echo "Started Converter for ${NAME}"
+    # If the directory doesn't exist, print a message
+    if [ ! -d "${converter_path}/configurations/${NAME}" ]; then
+        echo "Directory ${NAME} does not exist."
+        echo "${converter_path}/configurations/${NAME}"
+        echo "Converter for ${NAME} will not run"
+    else
+        # If we get to this point, both the directory and the script exist, so we can run the script.
+        bash "${SRC_DIR}"/Converter/converters/${NAME}/converter_${NAME,,}.sh "${converter_path}"
+        echo "${SRC_DIR}/Converter/converters/${NAME}/converter_${NAME,,}.sh ${converter_path}"
+        echo "Converter for ${NAME} ended"
+    fi
+fi
 
 # Move .gguf from Converter to Composer and patch YAML
 if [ "$run_converter" = "True" ] && [ "$run_composer" = "True" ]; then
