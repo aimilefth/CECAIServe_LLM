@@ -8,9 +8,28 @@ RUN apt-get update && apt-get install -y --no-install-recommends git \
 
 # Clone the llama.cpp repository which contains the conversion script
 WORKDIR /app
-RUN git clone --recurse-submodules https://github.com/abetlen/llama-cpp-python.git
+RUN git clone \
+      --branch v0.3.15 \
+      --single-branch \
+      --depth 1 \
+      --recurse-submodules \
+      --shallow-submodules \
+      https://github.com/abetlen/llama-cpp-python.git
 
+# Build the llama-quantize tool!
+WORKDIR /app/llama-cpp-python/vendor/llama.cpp
+# Build only the tools (CPU + OpenBLAS), make a Release build, and compile the quantizer
+RUN cmake -S . -B build -G Ninja \
+        -DCMAKE_BUILD_TYPE=Release \
+        -DLLAMA_BUILD_TESTS=OFF \
+        -DLLAMA_BUILD_EXAMPLES=OFF \
+        -DLLAMA_BUILD_TOOLS=ON \
+        -DLLAMA_BLAS=ON \
+        -DLLAMA_BLAS_VENDOR=OpenBLAS \
+    && cmake --build build --target llama-quantize -j "$(nproc)" \
+    && install -Dm755 build/bin/llama-quantize /usr/local/bin/llama-quantize
 
+WORKDIR /app
 # Arguments
 ARG CONVERTER_APP_ARG=converter.py
 ARG LOG_CONFIG_ARG=logconfig.ini

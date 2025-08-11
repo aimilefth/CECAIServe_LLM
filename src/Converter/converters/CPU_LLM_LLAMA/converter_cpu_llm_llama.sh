@@ -99,6 +99,7 @@ directories=(
   "${MODELS_PATH}/${MODEL_NAME}"
 )
 variables=(
+  "PRECISION"
 )
 
 missing_files=()
@@ -168,6 +169,7 @@ docker_run_params=$(cat <<-END
     -v ${LOGS_PATH}:/logs \
     -v ${OUTPUTS_PATH}:/outputs \
     --env MODEL_NAME=${MODEL_NAME} \
+    --env PRECISION=${PRECISION} \
     --pull=always \
     --rm \
     --network=host \

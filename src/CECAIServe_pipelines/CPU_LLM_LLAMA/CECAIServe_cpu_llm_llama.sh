@@ -120,6 +120,26 @@ if [ "$run_converter" = "True" ] && [ "$run_composer" = "True" ]; then
             fi
         fi
     done
+
+        # --- START: New logic to sync PRECISION from Converter to Composer ---
+    echo "Syncing PRECISION from Converter to Composer configuration..."
+    converter_config_file="${converter_path}/configurations/${NAME}/converter_args_${NAME,,}.yaml"
+
+    if [ -f "$converter_config_file" ]; then
+        # Extract the PRECISION value using grep and cut (awk replacement)
+        # This pipeline finds the line, takes the part after the ':', and removes all whitespace.
+        precision_value=$(grep '^PRECISION:' "$converter_config_file" | cut -d ':' -f 2 | tr -d '[:space:]')
+
+        if [ -n "$precision_value" ]; then
+            echo "Found PRECISION '${precision_value}' in Converter config. Updating Composer config..."
+            # Update the PRECISION_ARG in the composer's yaml
+            update_yaml "$composer_yaml_file" "PRECISION_ARG" "$precision_value"
+        else
+            echo "Warning: 'PRECISION' key not found in ${converter_config_file}. Composer's PRECISION_ARG will not be updated."
+        fi
+    else
+        echo "Warning: Converter config file not found at ${converter_config_file}. Cannot sync PRECISION."
+    fi
 fi
 
 # Run Composer
