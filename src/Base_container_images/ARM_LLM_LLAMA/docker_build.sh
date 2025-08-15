@@ -1,2 +1,2 @@
 #!/bin/bash
-docker buildx build -f ./Dockerfile --platform linux/arm64 --tag aimilefth/cecaiserve_base_images:arm_llm_llama_2 --push . &>build.log
+docker buildx build -f ./Dockerfile --platform linux/arm64 --tag aimilefth/cecaiserve_base_images:arm_llm_llama_3 --push . &>build.log
