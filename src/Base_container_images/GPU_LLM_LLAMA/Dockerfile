@@ -15,7 +15,7 @@ ENV GGML_CUDA=1
 RUN python3 -m pip install --upgrade pip pytest cmake scikit-build setuptools fastapi uvicorn sse-starlette pydantic-settings starlette-context huggingface-hub
 
 # Install llama-cpp-python (build with cuda)
-RUN CMAKE_ARGS="-DGGML_CUDA=on" pip install llama-cpp-python
+RUN CMAKE_ARGS="-DGGML_CUDA=on" pip install llama-cpp-python==0.3.14
 
 # Install opencv, requests and flask
 RUN pip install --no-cache-dir opencv-python requests flask redistimeseries python-dotenv pynvml pyJoules
