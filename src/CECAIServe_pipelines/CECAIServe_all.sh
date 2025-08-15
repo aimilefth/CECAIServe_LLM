@@ -4,7 +4,7 @@
 start_time=$(date +%s%N)
 
 # Array of directories to check
-dirs=("CPU_LLM_LLAMA" "CPU_LLM_VLLM" "Client")
+dirs=("CPU_LLM_LLAMA" "CPU_LLM_VLLM" "GPU_LLM_TRT" "Client")
 native_trf_dirs=("CPU_LLM_TRF")
 
 # Default values
