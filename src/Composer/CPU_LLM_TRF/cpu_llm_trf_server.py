@@ -19,7 +19,7 @@ class CpuLlmTrfServer(experiment_server.BaseExperimentServer):
         self.server_configs['NUM_THREADS'] = int(os.environ.get('NUM_THREADS', '-1'))
         self.server_configs['NUM_CPUS']   = os.environ.get('NUM_CPUS', 'Default')
         self.server_configs['CPU_SET']    = os.environ.get('CPU_SET', 'Default')
-
+        self.server_configs['PRECISION'] = os.environ['PRECISION']
         # LLM configs
         self.server_configs['MAX_LENGTH']      = int(os.environ.get('MAX_LENGTH', '1024'))
         self.server_configs['DO_SAMPLE']       = utils.strtobool(os.environ.get('DO_SAMPLE', 'True'))
@@ -48,6 +48,7 @@ class CpuLlmTrfServer(experiment_server.BaseExperimentServer):
             "text-generation",
             model=self.generator,
             tokenizer=self.tokenizer,
+            torch_dtype=map_precision_to_dtype(self.server_configs['PRECISION']),
             device=-1 # CPU
         )
         self.power_scraper = power_scraper.power_scraper()
@@ -145,3 +146,23 @@ class CpuLlmTrfServer(experiment_server.BaseExperimentServer):
             self.log(f"Set torch/OMP threads from NUM_CPUS to {n}")
         else:
             self.log("Torch threads left to default")
+
+def map_precision_to_dtype(precision_str):
+    """
+    Map env PRECISION to a torch dtype (or 'auto').
+    FP32 -> torch.float32
+    FP16 -> torch.float16
+    BF16 -> torch.bfloat16
+    auto -> 'auto'
+    """
+    s = str(precision_str).strip().lower()
+    mapping = {
+        'fp32': torch.float32,
+        'float32': torch.float32,
+        'fp16': torch.float16,
+        'float16': torch.float16,
+        'bf16': torch.bfloat16,
+        'bfloat16': torch.bfloat16,
+        'auto': 'auto',
+    }
+    return mapping.get(s, 'auto')
