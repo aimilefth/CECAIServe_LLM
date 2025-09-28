@@ -1,0 +1,6 @@
+IMAGE_NAME: aimilefth/cecaiserve_llm_converter
+MODEL_NAME: Phi-3.5-mini-instruct
+TRAINED: True
+MODELS_PATH: ../models
+LOGS_PATH: ../logs
+OUTPUTS_PATH: ../outputs

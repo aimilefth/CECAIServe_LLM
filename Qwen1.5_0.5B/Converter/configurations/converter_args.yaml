@@ -1,0 +1,6 @@
+IMAGE_NAME: aimilefth/cecaiserve_llm_converter
+MODEL_NAME: Qwen1.5-0.5B
+TRAINED: True
+MODELS_PATH: ../models
+LOGS_PATH: ../logs
+OUTPUTS_PATH: ../outputs

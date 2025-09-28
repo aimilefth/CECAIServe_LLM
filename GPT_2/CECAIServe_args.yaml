@@ -1,0 +1,4 @@
+input_framework: TRF
+run_converter: True
+run_composer: True
+compose_native_TRF: True

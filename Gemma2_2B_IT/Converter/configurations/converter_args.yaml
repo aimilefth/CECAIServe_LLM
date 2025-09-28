@@ -1,0 +1,6 @@
+IMAGE_NAME: aimilefth/cecaiserve_llm_converter
+MODEL_NAME: gemma-2-2b-it
+TRAINED: True
+MODELS_PATH: ../models
+LOGS_PATH: ../logs
+OUTPUTS_PATH: ../outputs

@@ -1,0 +1,6 @@
+IMAGE_NAME: aimilefth/cecaiserve_llm_converter
+MODEL_NAME: gpt2
+TRAINED: True
+MODELS_PATH: ../models
+LOGS_PATH: ../logs
+OUTPUTS_PATH: ../outputs
